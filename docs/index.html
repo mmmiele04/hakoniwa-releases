@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light" />
+    <link rel="icon" href="data:," />
+    <title>とりつばの箱庭 フィードバック</title>
+    <style>
+      :root {
+        --bg: #f4f1ea;
+        --paper: #fbf9f4;
+        --ink: #33302a;
+        --ink-soft: #6f6a5e;
+        --line: #ddd6c8;
+        --accent: #CE313D;
+        --accent-dark: #a82631;
+        --accent-soft: #f7e3e1;
+        --field-bg: #fffdf9;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", "Noto Sans JP", sans-serif;
+        font-size: 16px;
+        line-height: 1.8;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap {
+        max-width: 620px;
+        margin: 0 auto;
+        padding: 48px 20px 64px;
+      }
+      header { margin-bottom: 36px; }
+      .mark {
+        width: 34px; height: 34px;
+        border-radius: 50%;
+        background: var(--accent);
+        position: relative;
+        margin-bottom: 18px;
+      }
+      .mark::after {
+        content: "";
+        position: absolute;
+        left: 50%; top: 50%;
+        width: 12px; height: 12px;
+        border-radius: 50%;
+        background: var(--bg);
+        transform: translate(-50%, -50%);
+      }
+      h1 {
+        font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", "YuMincho", "Noto Serif JP", serif;
+        font-size: 26px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        margin: 0 0 10px;
+      }
+      .lead { color: var(--ink-soft); margin: 0; font-size: 15px; }
+      .privacy {
+        margin-top: 18px;
+        padding: 12px 16px;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        font-size: 14px;
+        color: var(--ink-soft);
+      }
+      .privacy strong { color: var(--accent-dark); font-weight: 600; }
+
+      form { margin: 0; }
+      .field { margin-bottom: 28px; }
+      label.field-label, .field-label {
+        display: block;
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .req {
+        display: inline-block;
+        margin-left: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #fff;
+        background: var(--accent);
+        border-radius: 3px;
+        padding: 1px 7px;
+        vertical-align: 2px;
+        letter-spacing: 0.05em;
+      }
+      .opt {
+        display: inline-block;
+        margin-left: 8px;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--ink-soft);
+        border: 1px solid var(--line);
+        border-radius: 3px;
+        padding: 1px 7px;
+        vertical-align: 2px;
+      }
+      .hint { font-size: 13px; color: var(--ink-soft); margin: 6px 0 0; }
+
+      .choices { display: flex; flex-wrap: wrap; gap: 10px; }
+      .choices label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+        padding: 8px 16px;
+        background: var(--field-bg);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 15px;
+        transition: border-color .15s, background .15s;
+      }
+      .choices label:hover { border-color: var(--accent); }
+      .choices input[type="radio"] {
+        accent-color: var(--accent);
+        width: 17px; height: 17px;
+        margin: 0;
+        flex: none;
+      }
+      .choices label:has(input:checked) {
+        border-color: var(--accent);
+        background: var(--accent-soft);
+      }
+
+      input[type="text"], textarea {
+        width: 100%;
+        font: inherit;
+        font-size: 16px;
+        color: var(--ink);
+        background: var(--field-bg);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 11px 14px;
+        min-height: 48px;
+      }
+      textarea { min-height: 170px; resize: vertical; line-height: 1.7; }
+      input[type="text"]:focus, textarea:focus {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+        border-color: var(--accent);
+      }
+      input::placeholder, textarea::placeholder { color: #a89f8e; }
+
+      .submit-btn {
+        display: block;
+        width: 100%;
+        min-height: 52px;
+        font: inherit;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        color: #fff;
+        background: var(--accent);
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background .15s;
+      }
+      .submit-btn:hover { background: var(--accent-dark); }
+      .submit-btn:disabled { background: #b9b2a2; cursor: default; }
+
+      .error {
+        display: none;
+        margin-top: 16px;
+        padding: 12px 16px;
+        border: 1px solid var(--accent);
+        border-radius: 6px;
+        background: var(--accent-soft);
+        color: var(--accent-dark);
+        font-size: 14px;
+      }
+      .error.show { display: block; }
+
+      .done {
+        display: none;
+        text-align: center;
+        padding: 48px 12px 24px;
+      }
+      .done.show { display: block; }
+      .done .seal {
+        width: 52px; height: 52px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        border: 2px solid var(--accent);
+        color: var(--accent);
+        display: flex; align-items: center; justify-content: center;
+      }
+      .done h2 {
+        font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", "YuMincho", "Noto Serif JP", serif;
+        font-size: 22px;
+        font-weight: 600;
+        margin: 0 0 12px;
+        letter-spacing: 0.04em;
+      }
+      .done p { color: var(--ink-soft); font-size: 15px; margin: 0 auto; max-width: 420px; }
+      .done .again {
+        margin-top: 28px;
+        display: inline-block;
+        min-height: 44px;
+        padding: 10px 22px;
+        font-size: 15px;
+        color: var(--accent-dark);
+        background: none;
+        border: 1px solid var(--accent);
+        border-radius: 999px;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .done .again:hover { background: var(--accent-soft); }
+
+      footer {
+        margin-top: 44px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        font-size: 13px;
+        color: var(--ink-soft);
+        text-align: center;
+      }
+      @media (max-width: 480px) {
+        .wrap { padding: 36px 16px 52px; }
+        h1 { font-size: 23px; }
+        .choices label { flex: 1 1 auto; justify-content: center; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="mark" aria-hidden="true"></div>
+        <h1>フィードバック</h1>
+        <p class="lead">デスクトップアプリ「とりつばの箱庭」への不具合の報告や、機能のご要望をお寄せください。</p>
+        <p class="privacy">このフォームでは、お名前や<strong>メールアドレスなどの個人情報は送信されません</strong>。入力いただくのは下の3項目だけです。</p>
+      </header>
+
+      <form id="fb-form" action="https://formsubmit.co/mmmi@muse.ai" method="POST">
+        <input type="hidden" name="_subject" value="とりつばの箱庭 フィードバック" />
+        <input type="hidden" name="_template" value="table" />
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+
+        <div class="field">
+          <span class="field-label" id="label-type">種類<span class="req">必須</span></span>
+          <div class="choices" role="radiogroup" aria-labelledby="label-type">
+            <label><input type="radio" name="種類" value="不具合の報告" required />不具合の報告</label>
+            <label><input type="radio" name="種類" value="機能の要望" />機能の要望</label>
+            <label><input type="radio" name="種類" value="その他" />その他</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="version">アプリのバージョン<span class="opt">任意</span></label>
+          <input type="text" id="version" name="アプリのバージョン" placeholder="例：0.1.33" autocomplete="off" />
+          <p class="hint">アプリの設定パネルなどで確認できます。分からなければ空欄で大丈夫です。</p>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="body">内容<span class="req">必須</span></label>
+          <textarea id="body" name="内容" required placeholder="不具合の場合は、どんな操作をしたときに起きたかも書いていただけると助かります。"></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">送信する</button>
+        <p class="error" id="error" role="alert"></p>
+      </form>
+
+      <div class="done" id="done" aria-live="polite">
+        <div class="seal" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        </div>
+        <h2>送信しました</h2>
+        <p>フィードバックありがとうございます。内容はすべて目を通します。ご連絡先をお聞きしていないため個別の返信はできませんが、今後の改善に役立てます。</p>
+        <button type="button" class="again" id="again-btn">もう1件送る</button>
+      </div>
+
+      <footer>とりつばの箱庭</footer>
+    </div>
+
+    <script>
+      (function () {
+        var form = document.getElementById('fb-form');
+        var btn = document.getElementById('submit-btn');
+        var errorBox = document.getElementById('error');
+        var done = document.getElementById('done');
+
+        form.addEventListener('submit', function (ev) {
+          ev.preventDefault();
+          errorBox.classList.remove('show');
+          btn.disabled = true;
+          btn.textContent = '送信中…';
+
+          var data = {};
+          new FormData(form).forEach(function (value, key) { data[key] = value; });
+
+          fetch('https://formsubmit.co/ajax/mmmi@muse.ai', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(data)
+          }).then(function (res) {
+            if (!res.ok) throw new Error('bad status');
+            return res.json();
+          }).then(function () {
+            form.style.display = 'none';
+            done.classList.add('show');
+            done.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }).catch(function () {
+            btn.disabled = false;
+            btn.textContent = '送信する';
+            errorBox.textContent = '送信できませんでした。通信環境を確認して、もう一度お試しください。';
+            errorBox.classList.add('show');
+          });
+        });
+
+        document.getElementById('again-btn').addEventListener('click', function () {
+          form.reset();
+          form.style.display = '';
+          done.classList.remove('show');
+          btn.disabled = false;
+          btn.textContent = '送信する';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      })();
+    </script>
+  </body>
+</html>
